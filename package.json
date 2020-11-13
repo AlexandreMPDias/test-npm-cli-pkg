@@ -1,10 +1,10 @@
 {
 	"name": "alex-npm-cli",
-	"version": "1.0.0-alfa",
+	"version": "1.0.0-alfa2",
 	"description": "",
-	"main": "./lib.index.js",
+	"main": "./dist/index.js",
 	"bin": {
-		"pizza": "./lib/index.js"
+		"pizza": "./dist/index.js"
 	},
 	"scripts": {
 		"start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
