@@ -27,7 +27,7 @@
 		"type": "git",
 		"url": "git+https://github.com/AlexandreMPDias/test-npm-cli-pkg.git"
 	},
-	"author": "",
+	"author": "tijuk",
 	"license": "ISC",
 	"bugs": {
 		"url": "https://github.com/AlexandreMPDias/test-npm-cli-pkg/issues"
