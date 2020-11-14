@@ -1,6 +1,6 @@
 {
 	"name": "alex-npm-cli",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "",
 	"main": "lib/index.js",
 	"bin": {
@@ -15,7 +15,7 @@
 		"kreate": "npm run build && npm run test",
 		"local": "sudo npm i -g && pizza",
 		"refresh": "rm -rf ./node_modules ./package-lock.json && npm install",
-		"format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+		"format": "prettier --write \"src/**/*.ts\"",
 		"lint": "tslint -p tsconfig.json",
 		"prepare": "npm run build",
 		"prepublishOnly": "npm test && npm run lint",
