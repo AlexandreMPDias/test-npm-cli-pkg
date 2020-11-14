@@ -1,14 +1,13 @@
 {
 	"name": "alex-npm-cli",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "",
-	"main": "index.js",
+	"main": "./lib/index.js",
 	"bin": {
-		"pizza": "index.js"
+		"pizza": "./lib/index.js"
 	},
 	"files": [
-		"lib/**/*",
-		"index.js"
+		"lib/**/*"
 	],
 	"scripts": {
 		"build": "tsc",
