@@ -1,30 +1,24 @@
 #!/usr/bin/env node
+import './commands';
 
 import chalk from 'chalk';
 import clear from 'clear';
 import figlet from 'figlet';
 import program from 'commander';
+import CommandBuilder from './services/command';
 
-clear();
-console.log(chalk.red(figlet.textSync('pizza-cli', { horizontalLayout: 'full' })));
+// clear();
+console.log(chalk.red(figlet.textSync('Alex-cli', { horizontalLayout: 'full' })));
 
-program
-	.version('0.0.1')
-	.description("An example CLI for ordering pizza's")
-	.option('-p, --peppers', 'Add peppers')
-	.option('-P, --pineapple', 'Add pineapple')
-	.option('-b, --bbq', 'Add bbq sauce')
-	.option('-c, --cheese <type>', 'Add the specified type of cheese [marble]')
-	.option('-C, --no-cheese', 'You do not want any cheese')
-	.parse(process.argv);
+program.name('master-cli').version('0.0.1').description("Master CLI interface").option('-c, --c')
+// .help(chalk.cyan)
 
-console.log('you ordered a pizza with:');
-if (program.peppers) console.log('  - peppers');
-if (program.pineapple) console.log('  - pineapple');
-if (program.bbq) console.log('  - bbq');
-const cheese: string = true === program.cheese ? 'marble' : program.cheese || 'no';
-console.log('  - %s cheese', cheese);
+CommandBuilder.parse({
+	argv: process.argv,
+	program,
+});
 
-if (!process.argv.slice(2).length) {
-	program.outputHelp();
-}
+// if (!process.argv.slice(2).length) {
+// 	console.log(process.argv);
+// 	program.outputHelp(s => chalk.cyan(s));
+// }
