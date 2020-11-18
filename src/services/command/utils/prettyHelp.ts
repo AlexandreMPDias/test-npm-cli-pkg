@@ -90,8 +90,6 @@ export default (args: string, version?: string) => {
 		const left = transposed[0][index] || '';
 		const right = transposed[1][index] || '';
 
-		console.log([transposed[0], right]);
-
 		if (left.match(SPLIT_KEY)) {
 			carry.start = index;
 			output[index] = {

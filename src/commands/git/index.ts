@@ -15,7 +15,6 @@ const command = CommandBuilder.create({
 	description: 'Git related commands',
 	builder: (yargs) => addCommands(yargs.demandCommand(1).version('alfa')),
 	validation: (argv) => {
-		console.log(argv);
 		if (!CommandBuilder.utils.paramIncludesAny(argv, ...Object.keys(subCommands))) {
 			return `Unsupported method [ ${argv._[1]} ]`;
 		}

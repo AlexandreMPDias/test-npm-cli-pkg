@@ -1,0 +1,42 @@
+{
+	"aix": {
+		"key": "aix",
+		"name": "Aix"
+	},
+	"android": {
+		"key": "android",
+		"name": "Android"
+	},
+	"cygwin": {
+		"key": "cygwin",
+		"name": "Cygwin"
+	},
+	"darwin": {
+		"key": "darwin",
+		"name": "Mac OS"
+	},
+	"freebsd": {
+		"key": "freebsd",
+		"name": "FreeBSD"
+	},
+	"linux": {
+		"key": "linux",
+		"name": "Linux"
+	},
+	"openbsd": {
+		"key": "openbsd",
+		"name": "OpenBSD"
+	},
+	"sunos": {
+		"key": "sunos",
+		"name": "Sunos"
+	},
+	"win32": {
+		"key": "win32",
+		"name": "Windows"
+	},
+	"netbsd": {
+		"key": "netbsd",
+		"name": "NetBSD"
+	}
+}

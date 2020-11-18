@@ -4,7 +4,11 @@ import Platform from '../platform';
 import factories from './factories';
 
 class UtilsConstructor {
-	public factories = factories;
+	public factories: typeof factories;
+
+	constructor() {
+		this.factories = factories;
+	}
 
 	/**
 	 * Opens a link at the local default browser
