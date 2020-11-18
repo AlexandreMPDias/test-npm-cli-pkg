@@ -1,10 +1,10 @@
 {
 	"name": "alex-npm-cli",
-	"version": "0.2.1",
+	"version": "0.2.3",
 	"description": "",
 	"main": "./lib/index.js",
 	"bin": {
-		"pizza": "./lib/index.js"
+		"alex": "./lib/index.js"
 	},
 	"files": [
 		"lib/**/*"
@@ -14,7 +14,7 @@
 		"build": "tsc",
 		"start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
 		"kreate": "npm run build && npm run test",
-		"local": "sudo npm i -g && pizza",
+		"local": "npm i -g && alex",
 		"refresh": "rm -rf ./node_modules ./package-lock.json && npm install",
 		"format": "prettier --write \"src/**/*.ts\"",
 		"lint": "tslint -p tsconfig.json",
@@ -22,7 +22,8 @@
 		"prepublishOnly": "npm test && npm run lint",
 		"preversion": "npm run lint",
 		"version": "npm run format && git add -A src",
-		"postversion": "git push && git push --tags"
+		"postversion": "git push && git push --tags",
+		"update:npm": "npm run version && npm publish"
 	},
 	"repository": {
 		"type": "git",
