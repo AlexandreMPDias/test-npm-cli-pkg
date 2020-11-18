@@ -1,35 +1,35 @@
-import commander from 'commander';
+import * as yargs from 'yargs';
 import * as types from './types';
-import CommandInstance from './instance';
+import utils from './utils'
 
-type CommandBuildArgs = {
-	argv: string[];
-	program: commander.Command;
-};
 
 class CommandBuilderConstructor {
-	/** @deprecated */
-	private cmds: ((args: CommandBuildArgs) => commander.Command)[] = [];
+	public utils = utils;
 
-	public create = <Name extends string, Flags extends Record<string, Command.Flag>, Params extends Command.Parameters[]>(shape: Command.Shape<Name, Flags, Params>) => {
-		return new CommandInstance(shape)
+	public create: types.ICommandCreate = (args) => {
+		const { command, description, builder, middlewares, validation } = args;
+		const out1 = (y: yargs.Argv) => {
+			return y.command(command, description, builder, undefined, middlewares);
+		}
+
+		const _handle: ReturnType<types.ICommandCreate>['handle'] = (handler) => {
+			return (y: yargs.Argv) => {
+				return y.command(command, description, builder, handler, middlewares);
+			}
+		}
+		const output = Object.assign(out1, { handle: _handle }) as any;
+		if (validation) {
+			return (y: yargs.Argv) => {
+				const argv = output(y).argv;
+				const errorMessage = validation(argv);
+				if (errorMessage) {
+					this.utils.throw(y, errorMessage, {});
+				}
+				return y;
+			}
+		}
+		return output
 	}
-
-	/** @deprecated */
-	register = (
-		registration: (args: CommandBuildArgs) => commander.Command,
-	): CommandBuilderConstructor => {
-		this.cmds.push(registration)
-		return this;
-	};
-
-	parse = (arg: CommandBuildArgs) => {
-		let prog = arg.program;
-		this.cmds.forEach(cmd => {
-			prog.addCommand(cmd({ program: prog, argv: [] }));
-		})
-		prog.parse()
-	};
 }
 
 const CommandBuilder = new CommandBuilderConstructor();

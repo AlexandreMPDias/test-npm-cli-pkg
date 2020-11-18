@@ -1,37 +1,25 @@
+import { pipe } from 'ramda';
 import CommandBuilder from '../../services/command';
 import pullRequest from './pull-request';
+import release from './release';
 
-type Args = [typeof pullRequest.name];
+const subCommands = {
+	'pull-request': pullRequest,
+	release,
+};
+
+const addCommands = pipe(subCommands['pull-request'], subCommands.release);
 
 const command = CommandBuilder.create({
-	name: 'git',
+	command: 'git',
 	description: 'Git related commands',
-	flags: {},
-	params: [{
-		name: 'method',
-		description: 'The git method to be called',
-		accepts: [
-			pullRequest.name
-		]
-	}],
-	handle: (args: any) => {
-		const [method]: Args = args;
-		switch (method) {
-			case 'pull-request': {
-				pullRequest.handle(process.argv.slice(3));
-				return;
-			}
-			default: {
-				console.log("help");
-			}
+	builder: (yargs) => addCommands(yargs.demandCommand(1).version('alfa')),
+	validation: (argv) => {
+		console.log(argv);
+		if (!CommandBuilder.utils.paramIncludesAny(argv, ...Object.keys(subCommands))) {
+			return `Unsupported method [ ${argv._[1]} ]`;
 		}
-	}
-})
+	},
+});
 
-CommandBuilder.register(({ program }) => program
-	.command('git')
-	.description("Git related commands")
-	// .addCommand(pullRequest(program))
-	.action(({ args }) => command.handle(args))
-)
 export default command;
