@@ -31,7 +31,7 @@ class PlatformConstructor {
 		return platforms.some((p) => p === process.platform);
 	};
 
-	public select: Utils.Selection<NodeJS.Platform> = Utils.factories.selection(this.currPlatform);
+	public select: Utils.Selection<NodeJS.Platform> = Utils.factories.selection(() => this.currPlatform);
 
 	unsupported = () => {
 		console.log(`${chalk.red('Error: ')}[ ${chalk.cyan(this._currPlatform)} ] is not a supported platform.`);
