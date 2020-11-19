@@ -1,35 +1,28 @@
-import * as yargs from 'yargs';
+import { Argv } from 'yargs';
 import * as types from './types';
-import utils from './utils'
-
-
+import utils from './utils';
+import applyMiddlewares from './middlewares';
 class CommandBuilderConstructor {
 	public utils = utils;
 
-	public create: types.ICommandCreate = (args) => {
-		const { command, description, builder, middlewares, validation } = args;
-		const out1 = (y: yargs.Argv) => {
-			return y.command(command, description, builder, undefined, middlewares);
-		}
+	public create: types.ICommandCreate = (args: any) => {
+		const out1: Utils.PipeFn<Argv> = this._create(args);
+		const _handle: ReturnType<types.ICommandCreate>['handle'] = (handler) => this._create(args, handler);
 
-		const _handle: ReturnType<types.ICommandCreate>['handle'] = (handler) => {
-			return (y: yargs.Argv) => {
-				return y.command(command, description, builder, handler, middlewares);
-			}
-		}
-		const output = Object.assign(out1, { handle: _handle }) as any;
-		if (validation) {
-			return (y: yargs.Argv) => {
-				const argv = output(y).argv;
-				const errorMessage = validation(argv);
-				if (errorMessage) {
-					this.utils.throw(y, errorMessage, {});
-				}
-				return y;
-			}
-		}
-		return output
-	}
+		return Object.assign(out1, { handle: _handle }) as any;
+	};
+
+	private _create = (args: Parameters<types.ICommandCreate>[0], handler?: any): Utils.PipeFn<Argv> => {
+		return (y: Argv) => {
+			const { command, description, builder, middlewares = [] } = args;
+
+			(y as any).gilmar = true;
+			y = y.command(command, description, builder, handler);
+			y = applyMiddlewares(y, middlewares);
+
+			return y;
+		};
+	};
 }
 
 const CommandBuilder = new CommandBuilderConstructor();

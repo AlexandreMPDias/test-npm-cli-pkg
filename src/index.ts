@@ -7,9 +7,12 @@ import figlet from 'figlet';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import commands from './commands';
+import applyGlobalMiddlewares from './services/command/middlewares/global';
 
 clear();
 console.log(chalk.red(figlet.textSync('Alex-cli', { horizontalLayout: 'full' })));
 
-const main = commands.all(yargs(hideBin(process.argv))).demandCommand(1);
+const base = yargs(hideBin(process.argv)).demandCommand(1);
+
+const main = applyGlobalMiddlewares(commands.all(base));
 const _ = main.argv;

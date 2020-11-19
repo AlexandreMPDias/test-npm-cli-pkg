@@ -22,7 +22,8 @@ const command = CommandBuilder.create({
 				description: "The source branch's name",
 				type: 'string',
 				default: 'dev',
-			}),
+			})
+			.usage('release 20 Analytics'),
 }).handle(({ sprint, name, source }) => {
 	const targetBranchName = releaseUtils.join({ sprint, name, source });
 

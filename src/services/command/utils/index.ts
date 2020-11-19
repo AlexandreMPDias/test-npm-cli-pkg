@@ -5,5 +5,5 @@ import paramIncludesAny from './paramIncludesAny';
 export default {
 	prettyHelp,
 	throw: _throw,
-	paramIncludesAny
-}
+	paramIncludesAny,
+};
