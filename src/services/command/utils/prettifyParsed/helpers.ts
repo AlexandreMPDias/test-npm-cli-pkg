@@ -6,18 +6,17 @@ const compose = (_ramdaCompose as unknown) as (...args: Utils.PipeFn<string>[]) 
 
 const applyForNonEmpty = (cb: Utils.PipeFn<string>) => (s: string = '$1') => (s ? cb(s) : s);
 
-
-type WUT = `x${1 | 2 | 3 | 4 | 5 | 6}`;
+type WUT = 'x1' | 'x2' | 'x3' | 'x4' | 'x5' | 'x6';
 
 const basicTab = ' '.repeat(2);
-const tab: string & Record<WUT,string> = Object.assign(basicTab, {
+const tab: string & Record<WUT, string> = Object.assign(basicTab, {
 	x1: basicTab,
 	x2: basicTab.repeat(2),
 	x3: basicTab.repeat(3),
 	x4: basicTab.repeat(4),
 	x5: basicTab.repeat(5),
 	x6: basicTab.repeat(6),
-})
+});
 
 const colors = {
 	name: applyForNonEmpty(chalk.green.underline.bold),
@@ -38,16 +37,19 @@ const colors = {
 };
 
 const paintFlags = (flags: string[]) => {
-	return flags.map(flag => flag.slice(1).replace(/\]$/,'')).map(flag => {
-		if(['boolean', 'string', 'array', 'number'].includes(flag)) {
-			return chalk.yellowBright;
-		}
-		if(flag.startsWith('[default')) {
-			return chalk.underline.blue;
-		}
-		return chalk.bold.greenBright;
-	}).map((color, index) => color(flags[index]))
-}
+	return flags
+		.map((flag) => flag.slice(1).replace(/\]$/, ''))
+		.map((flag) => {
+			if (['boolean', 'string', 'array', 'number'].includes(flag)) {
+				return chalk.yellowBright;
+			}
+			if (flag.startsWith('[default')) {
+				return chalk.underline.blue;
+			}
+			return chalk.bold.greenBright;
+		})
+		.map((color, index) => color(flags[index]));
+};
 
 export const paintParsed = (parsed: IShape) => {
 	return {
