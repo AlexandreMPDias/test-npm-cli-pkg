@@ -25,28 +25,29 @@ const spread = (str: string, size: number) => {
 const handler = (argv: Arguments<consts.IConfig>) => {
 	const { fileName, mode, prop } = argv;
 
-	const content = JSON.parse(ImportService.require('cwd', fileName));
+	const content = ImportService.require('cwd', fileName);
+	if (content) {
+		const max = Math.max(...[fileName, mode, prop].map((x) => x.length));
 
-	const max = Math.max(...[fileName, mode, prop].map((x) => x.length));
+		Log.simple.info(chalk.cyan(`File's name set to:  [ ${chalk.red(spread(fileName, max))} ]`));
+		Log.simple.info(chalk.cyan(`File's props set to: [ ${chalk.greenBright(spread(prop, max))} ]`));
+		Log.simple.info(chalk.cyan(`Mode set to:         [ ${chalk.red(spread(mode, max))} ]`));
+		Log.simple.info('');
 
-	Log.simple.info(chalk.cyan(`File's name set to:  [ ${chalk.red(spread(fileName, max))} ]`));
-	Log.simple.info(chalk.cyan(`File's props set to: [ ${chalk.greenBright(spread(prop, max))} ]`));
-	Log.simple.info(chalk.cyan(`Mode set to:         [ ${chalk.red(spread(mode, max))} ]`));
-	Log.simple.info('');
-
-	switch (mode) {
-		case 'keysOnly': {
-			const keys = Object.keys(content).sort();
-			console.log(keys);
-			return;
-		}
-		case 'full': {
-			const out = access(content, prop);
-			console.log(out);
-			return;
-		}
-		default: {
-			throw new Error(`Unsupported error`);
+		switch (mode) {
+			case 'keysOnly': {
+				const keys = Object.keys(content).sort();
+				console.log(keys);
+				return;
+			}
+			case 'full': {
+				const out = access(content, prop);
+				console.log(out);
+				return;
+			}
+			default: {
+				throw new Error(`Unsupported error`);
+			}
 		}
 	}
 };

@@ -54,6 +54,12 @@ class LogConstructor {
 		);
 	};
 
+	public abort = (err: unknown, location?: string): never => {
+		const message = err instanceof Error ? err.message : String(err);
+		this.error(message, location);
+		process.exit(1);
+	};
+
 	private createLog = (args: { location?: string; key: keyof typeof COLORS; message: any }): string => {
 		const base = this.modeSelect({
 			simple: COLORS[args.key].base.bold,

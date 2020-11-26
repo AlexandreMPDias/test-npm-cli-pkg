@@ -1,5 +1,8 @@
 import * as path from 'path';
 import { readFileSync } from 'fs';
+import _Log from '../log';
+
+const Log = _Log.instance('ImportService');
 
 interface IPathRelation {
 	/**
@@ -23,7 +26,7 @@ class ImportServiceConstructor {
 		return this._cachedPackageJSON;
 	}
 
-	require = (relative: keyof IPathRelation, _path: string): string => {
+	require = (relative: keyof IPathRelation, _path: string): object => {
 		if (relative === 'cwd') {
 			const prefix = process.cwd();
 			return this._require(path.join(prefix, _path));
@@ -32,15 +35,20 @@ class ImportServiceConstructor {
 			const prefix = new Array(3).fill('..');
 			return this._require(path.join(...prefix, _path));
 		}
-		throw new ReferenceError(`Invalid relation type [ ${relative} ]`);
+		return Log.abort(`Invalid relation type [ ${relative} ]`);
 	};
 
-	private _require = (_path: string): string => {
+	private _require = (_path: string): object => {
 		const sufix = path.extname(_path);
 		if (sufix && sufix !== '.json') {
 			throw new TypeError(`Invalid extension for file ${_path}`);
 		}
-		return readFileSync(_path, { encoding: 'utf-8' });
+		try {
+			const fileContent: string = readFileSync(_path, { encoding: 'utf-8' });
+			return JSON.parse(fileContent);
+		} catch (err: unknown) {
+			return Log.abort(err);
+		}
 	};
 }
 
