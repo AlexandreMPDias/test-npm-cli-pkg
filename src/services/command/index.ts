@@ -2,6 +2,7 @@ import { Argv } from 'yargs';
 import * as types from './types';
 import utils from './utils';
 import applyMiddlewares from './middlewares';
+
 class CommandBuilderConstructor {
 	public utils = utils;
 
@@ -16,8 +17,20 @@ class CommandBuilderConstructor {
 		return (y: Argv) => {
 			const { command, description, builder, middlewares = [] } = args;
 
-			(y as any).gilmar = true;
-			y = y.command(command, description, builder, handler);
+			(y as any).registeredUsage = [...((y as any).registeredUsage || []), command];
+			y = y.command(
+				command,
+				description,
+				builder,
+				handler,
+				//  &&
+				// 	((argv) => {
+				// 		if (argv.help) {
+				// 			throw new Error();
+				// 		}
+				// 		handler(argv);
+				// 	})
+			);
 			y = applyMiddlewares(y, middlewares);
 
 			return y;

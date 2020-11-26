@@ -23,7 +23,11 @@ const command = CommandBuilder.create({
 				type: 'string',
 				default: 'dev',
 			})
-			.usage('release 20 Analytics'),
+			.usage(`${chalk.yellow('release')} ${chalk.cyan.bold('[sprint] [name]')} ${chalk.magenta('<source>')}`)
+			.example(
+				`${chalk.yellow('release')} ${chalk.cyan.bold('20 Analytics')}`,
+				'Creates a release branch named: [ YY.20_Analytics_Release ], copied from dev',
+			),
 }).handle(({ sprint, name, source }) => {
 	const targetBranchName = releaseUtils.join({ sprint, name, source });
 

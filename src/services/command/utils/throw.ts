@@ -16,13 +16,14 @@ interface IErrorOptions {
 }
 
 export default (y: Argv, error: string, options: IErrorOptions = {}) => {
-	console.log(yargsParser(y));
-
-	y.showHelp((help: string) => {
-		console.error(chalk.red(`Error: ${error}`));
-		// console.log(detailed(help));
-		// prettyHelp(help, options.version);
-	});
+	if (error) {
+		// console.log(yargsParser(y));
+		y.showHelp((help: string) => {
+			// console.error(chalk.red(`Error: [${error}]`));
+			// console.log(detailed(help));
+			// prettyHelp(help, options.version);
+		});
+	}
 	if (options.exit) {
 		process.exit(1);
 	}

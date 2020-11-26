@@ -23,15 +23,24 @@ class ImportServiceConstructor {
 		return this._cachedPackageJSON;
 	}
 
-	open = (relative: keyof IPathRelation, _path: string): string => {
-		// if(relative === 'cwd') {
-		// 	throw
-		// }
+	require = (relative: keyof IPathRelation, _path: string): string => {
+		if (relative === 'cwd') {
+			const prefix = process.cwd();
+			return this._require(path.join(prefix, _path));
+		}
 		if (relative === 'root') {
 			const prefix = new Array(3).fill('..');
-			return readFileSync(path.join(...prefix, _path), { encoding: 'utf-8' });
+			return this._require(path.join(...prefix, _path));
 		}
 		throw new ReferenceError(`Invalid relation type [ ${relative} ]`);
+	};
+
+	private _require = (_path: string): string => {
+		const sufix = path.extname(_path);
+		if (sufix && sufix !== '.json') {
+			throw new TypeError(`Invalid extension for file ${_path}`);
+		}
+		return readFileSync(_path, { encoding: 'utf-8' });
 	};
 }
 

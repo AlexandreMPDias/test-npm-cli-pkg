@@ -10,10 +10,10 @@ const prettifyParsed = (uglyParsed: IShape) => {
 		parsed.description,
 		br,
 		``,
-		`Commands:`,
+		parsed.commands.length && `Commands:`,
 		parsed.commands.join('\n'),
 		br,
-		`Options:`,
+		parsed.options.length && `Options:`,
 		parsed.options.join('\n'),
 		br,
 	]

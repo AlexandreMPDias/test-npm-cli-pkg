@@ -20,11 +20,11 @@ const tab: string & Record<WUT,string> = Object.assign(basicTab, {
 })
 
 const colors = {
-	name: applyForNonEmpty(chalk.green),
+	name: applyForNonEmpty(chalk.green.underline.bold),
 	description: applyForNonEmpty(chalk.white),
 	commands: {
 		description: applyForNonEmpty(chalk.white),
-		name: applyForNonEmpty(chalk.yellow),
+		name: applyForNonEmpty(chalk.yellow.underline),
 		args: {
 			required: applyForNonEmpty(chalk.cyan),
 			optional: applyForNonEmpty(chalk.hex('#ffa500')),
@@ -32,10 +32,22 @@ const colors = {
 	},
 	option: {
 		desc: applyForNonEmpty(chalk.white),
-		alias: applyForNonEmpty(chalk.yellow),
+		alias: applyForNonEmpty(chalk.cyan),
 		flags: applyForNonEmpty(chalk.magenta),
 	},
 };
+
+const paintFlags = (flags: string[]) => {
+	return flags.map(flag => flag.slice(1).replace(/\]$/,'')).map(flag => {
+		if(['boolean', 'string', 'array', 'number'].includes(flag)) {
+			return chalk.yellowBright;
+		}
+		if(flag.startsWith('[default')) {
+			return chalk.underline.blue;
+		}
+		return chalk.bold.greenBright;
+	}).map((color, index) => color(flags[index]))
+}
 
 export const paintParsed = (parsed: IShape) => {
 	return {
@@ -62,13 +74,13 @@ export const paintParsed = (parsed: IShape) => {
 		}),
 		options: parsed.options.map((opt) => {
 			const col = colors.option;
-			const alias = `${tab}${opt.alias.trim()}`.padEnd(20, ' ');
+			const alias = `${tab}${opt.aliases.join(', ')}`.padEnd(20, ' ');
 			const painted = {
 				alias: col.alias(alias),
 				desc: col.desc(opt.desc),
-				flags: col.flags(opt.flags),
+				flags: paintFlags(opt.flags).join(' '),
 			};
-			return `${painted.alias} ${painted.desc}\t${painted.flags}`;
+			return `${painted.alias}\t${painted.flags}\n${tab.x2}${painted.desc}`;
 		}),
 	};
 };

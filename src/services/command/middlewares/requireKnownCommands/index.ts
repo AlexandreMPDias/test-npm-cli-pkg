@@ -1,36 +1,23 @@
-import { flatten } from 'ramda';
 import { Argv } from 'yargs';
-import { getCommands, getBasic } from '../../utils/parser';
-
-const getEverySingleTinyAlias = (yargs: Argv<any>, _aliases: any): Record<string, true> => {
-	const forceUniqueness: Record<string, true> = {};
-	const flatAliases: string[] = flatten(Object.entries(_aliases)) as any;
-	flatAliases.forEach((alias) => {
-		forceUniqueness[alias] = true;
-	});
-	getCommands(yargs).forEach((cmd) => {
-		forceUniqueness[cmd.name] = true;
-	});
-	return forceUniqueness;
-};
 
 const requireKnownCommands = <T>(yargs: Argv<T>): Argv<T> => {
-	return yargs.check((argv, _aliases) => {
-		// const aliases = getEverySingleTinyAlias(yargs, _aliases);
-
+	return yargs.strict().check((argv, _aliases) => {
+		if (argv.help) {
+			return;
+		}
 		const positionals = argv._.filter((x) => !x.startsWith('-'));
 
+		const y = yargs as any;
 		const cmd = positionals.pop() || '';
-		const parentScriptName = getBasic(yargs).name;
+		const parentScriptName = positionals[positionals.length - 1];
 
-		if (cmd === parentScriptName) {
-			throw new Error(`Missing required command`);
-		}
+		// if (!parentScriptName || cmd === parentScriptName) {
+		// 	throw new Error(`Missing required command`);
+		// }
 
-		const acceptedCommands = getCommands(yargs).map((c) => c.name);
+		const acceptedCommands = y.getCommandInstance()?.getCommands();
 
-		// if (!aliases[cmd]) {
-		if (!acceptedCommands.includes(cmd)) {
+		if (acceptedCommands.length && !acceptedCommands.includes(cmd)) {
 			throw new Error(`Unknown command: [ ${cmd} ]`);
 		}
 	});

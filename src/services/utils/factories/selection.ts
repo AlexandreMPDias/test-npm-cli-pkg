@@ -6,11 +6,9 @@ const createSelection: ICreateSelection = (activeProperty: PropertyKey | Utils.F
 	return (selectObject: any) => {
 		const active = typeof activeProperty === 'function' ? activeProperty() : activeProperty;
 
-		const currSelection = selectObject[active];
-		if (currSelection) return currSelection;
+		if (active in selectObject) return selectObject[active];
 
-		const defaultSelection = selectObject.default;
-		if (defaultSelection) return defaultSelection;
+		if ('default' in selectObject) return selectObject.default;
 
 		return undefined;
 	};
