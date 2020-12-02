@@ -1,4 +1,5 @@
 interface ICreateSelection {
+	<K extends string>(active: K | Utils.Callback<never, K>): Utils.Selection<K>;
 	<K extends PropertyKey>(active: K | Utils.Callback<never, K>): Utils.Selection<K>;
 }
 

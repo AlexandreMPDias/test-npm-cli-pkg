@@ -3,10 +3,10 @@ import { Argv } from 'yargs';
 import { pipe } from 'ramda';
 
 // Commands
-import lasanha from './lasanha';
+import config from './config';
 import git from './git';
 import json from './json';
 
 export default {
-	all: (yargs: Argv): Argv => pipe(lasanha, git, json)(yargs),
+	all: (yargs: Argv): Argv => pipe(config, git, json)(yargs),
 };

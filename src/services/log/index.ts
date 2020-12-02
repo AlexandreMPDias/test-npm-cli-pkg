@@ -2,10 +2,12 @@ import createSelection from '../utils/factories/selection';
 import * as types from './types';
 import { COLORS, INITIAL_OPTIONS } from './constants';
 import utils from './utils';
+import chalk from 'chalk';
 
-class LogConstructor {
+class LogConstructor implements types.ILogConstructor {
 	private options: types.ILogOptions;
 	private _location: string;
+	public parent: LogConstructor | null = null;
 	public simple: LogConstructor = {} as any;
 
 	constructor(location: string = '', options: types.ILogOptions = INITIAL_OPTIONS) {
@@ -17,6 +19,11 @@ class LogConstructor {
 		}
 	}
 
+	public setMode = (mode: types.Mode) => {
+		this.options.mode = mode;
+		return this;
+	};
+
 	public instance = (location: string, options?: Partial<types.ILogOptions>): LogConstructor => {
 		return new LogConstructor(location, {
 			debugLevel: options?.debugLevel || 'log',
@@ -24,51 +31,44 @@ class LogConstructor {
 		});
 	};
 
-	public warning = (message: any, location?: string) => {
-		console.warn(
-			this.createLog({
-				location,
-				message,
-				key: 'warning',
-			}),
-		);
+	public child = (location: string, options: Partial<types.ILogOptions> = {}): LogConstructor => {
+		const base = this._location.length ? `${this._location}/` : '';
+		const instance = this.instance(base + location, options);
+		instance.parent = this;
+		return instance;
+	};
+
+	public warn = (message: any, location?: string) => {
+		console.log(this.createLog({ message, location, key: 'warn' }));
+		return this;
 	};
 
 	public info = (message: any, location?: string) => {
-		console.log(
-			this.createLog({
-				location,
-				message,
-				key: 'log',
-			}),
-		);
+		console.log(this.createLog({ message, location, key: 'info' }));
+		return this;
+	};
+
+	public success = (message: any, location?: string) => {
+		console.log(this.createLog({ message, location, key: 'success' }));
+		return this;
 	};
 
 	public error = (message: any, location?: string) => {
-		console.error(
-			this.createLog({
-				location,
-				message,
-				key: 'error',
-			}),
-		);
+		console.log(this.createLog({ message, location, key: 'error' }));
+		return this;
 	};
 
 	public abort = (err: unknown, location?: string): never => {
 		const message = err instanceof Error ? err.message : String(err);
 		this.error(message, location);
+		console.log(chalk.bold.red('\nAborting execution\n'));
 		process.exit(1);
 	};
 
 	private createLog = (args: { location?: string; key: keyof typeof COLORS; message: any }): string => {
-		const base = this.modeSelect({
-			simple: COLORS[args.key].base.bold,
-			extended: COLORS[args.key].base.bold.underline,
-		});
-		const bright = COLORS[args.key].bright;
-
-		const tag = utils.createTag.call(this as any, base, args.key);
-		const body = utils.createBody.call(this as any, bright, args);
+		const method = COLORS[args.key];
+		const tag = utils.createTag.call(this as any, method.base, method.tag, args.key);
+		const body = utils.createBody.call(this as any, method.bright, args);
 
 		return [tag, body].join(' ').trim();
 	};
@@ -76,6 +76,8 @@ class LogConstructor {
 	private modeSelect: Utils.Selection<types.ILogOptions['mode']> = createSelection(() => this.options.mode);
 }
 
-const Log = new LogConstructor();
+const Log = new LogConstructor() as types.ILogConstructor;
+
+export type LogInstance = typeof Log;
 
 export default Log;
