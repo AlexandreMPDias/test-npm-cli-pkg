@@ -1,6 +1,6 @@
 export type DebugLevel = 'log' | 'err' | 'warn' | 'success' | 'none' | 'debug';
 
-export type Mode = 'simple' | 'extended' | 'extended_caps';
+export type Mode = Config.Terminal.Mode;
 
 export interface ILogOptions {
 	debugLevel: DebugLevel;
@@ -21,7 +21,7 @@ export interface ILogConstructor extends Record<LogType, LogMethod> {
 	parent: ILogConstructor | null;
 	simple: ILogConstructor;
 
-	setMode: (mode: Mode) => ILogConstructor;
+	setOptions: (options: ILogOptions) => ILogConstructor;
 	instance: (location: string, options?: Partial<ILogOptions>) => ILogConstructor;
 	child: (location: string, options?: Partial<ILogOptions>) => ILogConstructor;
 

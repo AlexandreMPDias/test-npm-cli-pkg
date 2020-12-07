@@ -12,8 +12,7 @@ function createBody(this: types.LogThisType, _chalk: Chalk, args: IArgument) {
 
 	const body = this.modeSelect({
 		simple: String(message),
-		extended: `${loc} > ${message}`,
-		extended_caps: `${loc} > ${message}`,
+		default: loc ? `${loc} > ${message}` : message,
 	});
 	return _chalk(body);
 }

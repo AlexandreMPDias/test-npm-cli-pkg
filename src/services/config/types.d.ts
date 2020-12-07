@@ -8,6 +8,13 @@ declare namespace Config {
 			consoleMode: Config.Terminal.Mode;
 			beforeEach: Config.Terminal.BeforeMiddlewares;
 		};
+		commands: {
+			git: {
+				'pull-request': {
+					enableParentDetection: boolean;
+				};
+			};
+		};
 	};
 }
 
@@ -18,7 +25,7 @@ declare namespace Config.Git {
 declare namespace Config.Terminal {
 	type Level = 'log' | 'err' | 'warn' | 'success' | 'none' | 'debug';
 
-	type Mode = 'simple' | 'extended' | 'extended_caps';
+	type Mode = 'simple' | 'extended' | 'extended_caps' | 'best';
 
 	type BeforeMiddlewares = {
 		consoleClear: boolean;

@@ -2,15 +2,17 @@ import chalk from 'chalk';
 import CommandBuilder from '../../../services/command';
 import Exec from '../../../services/exec';
 import * as releaseUtils from './utils';
+import Git from '../../../services/apis/Git';
+import Log from '../../../services/log';
 
 const command = CommandBuilder.create({
-	command: 'release [sprint] [name] <source>',
+	command: 'release sprint name source',
 	description: 'Creates a release branch at the remote',
 	builder: (yargs) =>
 		yargs
 			.positional('sprint', {
 				description: 'The current sprint',
-				type: 'number',
+				type: 'string',
 				demandOption: true,
 			})
 			.positional('name', {
@@ -28,13 +30,18 @@ const command = CommandBuilder.create({
 				`${chalk.yellow('release')} ${chalk.cyan.bold('20 Analytics')}`,
 				'Creates a release branch named: [ YY.20_Analytics_Release ], copied from dev',
 			),
-}).handle(({ sprint, name, source }) => {
-	const targetBranchName = releaseUtils.join({ sprint, name, source });
+}).handle((args) => {
+	try {
+		Git.hasGitDir();
+	} catch (err) {
+		Log.abort(err);
+	}
 
-	console.log(`Creating branch: [ ${chalk.cyan(targetBranchName)} ]\n`);
+	console.log(args);
+	const targetBranchName = releaseUtils.join({ ...args, sprint: Number(args.sprint) });
 
 	console.log('Creating branch ' + chalk.yellow('locally'));
-	Exec.execSync(`git fetch -f origin ${source}:${targetBranchName}`);
+	Exec.execSync(`git fetch -f origin ${args.source}:${targetBranchName}`);
 
 	console.log('Pushing new branch to upstream');
 	Exec.execSync(`git push -u origin ${targetBranchName}`);

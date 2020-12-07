@@ -1,7 +1,6 @@
 import CommandBuilder from '../../../services/command';
 import { constants } from '../../../services/config';
 import FileService from '../../../services/file';
-import Log from '../../../services/log';
 
 const configFileName = constants.FILE_NAME;
 
