@@ -106,3 +106,5 @@ dist
 /lib
 /dist
 /build
+
+.alex-config.json

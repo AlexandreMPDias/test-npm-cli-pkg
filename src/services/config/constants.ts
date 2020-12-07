@@ -11,4 +11,11 @@ export const DEFAULT_SHAPE: Config.FileShape = {
 		},
 		consoleMode: 'extended',
 	},
+	commands: {
+		git: {
+			'pull-request': {
+				enableParentDetection: false,
+			},
+		},
+	},
 };

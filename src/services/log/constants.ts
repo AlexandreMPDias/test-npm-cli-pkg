@@ -3,7 +3,7 @@ import * as types from './types';
 
 export const INITIAL_OPTIONS: types.ILogOptions = {
 	debugLevel: 'log',
-	mode: 'extended',
+	mode: 'simple',
 };
 
 export const COLORS: Record<types.LogType, Record<'base' | 'bright', Chalk> & { tag: string }> = {

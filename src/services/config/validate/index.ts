@@ -14,7 +14,7 @@ const validators: types.CustomValidators = {
 		accepts: ['https', 'ssh'],
 	},
 	'terminal.consoleMode': {
-		accepts: ['extended', 'extended_caps', 'simple'],
+		accepts: ['extended', 'extended_caps', 'simple', 'best'],
 	},
 	'terminal.level': {
 		accepts: ['debug', 'err', 'log', 'none', 'success', 'warn'],
@@ -23,9 +23,9 @@ const validators: types.CustomValidators = {
 
 const customValidate = (key: string, value: any, validator: types.IValidation<any, any>): string | null => {
 	if (!validator.accepts.includes(value)) {
-		return `Property: ${paintProp(key)} must be either [${validator.accepts
-			.map((s) => `[ ${chalk.blueBright(s)} ]`)
-			.join(', ')}]`;
+		return `Property: ${paintProp(key)} must be either [\n${validator.accepts
+			.map((s) => `\t[ ${chalk.blueBright(s)} ]`)
+			.join('\n')}\n]`;
 	}
 	return null;
 };

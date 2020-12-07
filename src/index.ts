@@ -15,7 +15,7 @@ if (ConfigService.get('terminal.beforeEach.consoleClear')) {
 }
 // console.log(chalk.red(figlet.textSync('Alex-cli', { horizontalLayout: 'full' })));
 
-const base = yargs(hideBin(process.argv)).demandCommand(1);
+const base = yargs(hideBin([...process.argv])).demandCommand(1);
 
 const main = applyGlobalMiddlewares(commands.all(base));
 const _ = main.argv;
