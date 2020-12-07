@@ -1,24 +1,23 @@
 import * as loader from './loader';
 import methods, { methodKeys } from './methods';
 
-export class TesteSingleConstructorClass implements loader.Properties {
+export class TesteSingleConstructor extends loader.ITesteSingleton {
 	public a: number;
 	public b: number;
 	public privKey: any;
 
-	constructor(a: number, b: number) {
+	constructor(a: number = 2, b: number = 3) {
+		super();
 		this.a = a;
 		this.b = b;
+
+		methodKeys.forEach((key) => {
+			const out: any = methods[key](this);
+			this[key] = out;
+		});
 	}
 }
 
-export const instantiate = (a: number, b: number): loader.ITesteSingleton => {
-	const instance: any = new TesteSingleConstructorClass(a, b);
+const TesteSingle = new TesteSingleConstructor();
 
-	const binder: any = {};
-	methodKeys.forEach((key) => {
-		binder[key] = methods[key](instance);
-	});
-
-	return Object.assign(instance, binder);
-};
+export default TesteSingle;

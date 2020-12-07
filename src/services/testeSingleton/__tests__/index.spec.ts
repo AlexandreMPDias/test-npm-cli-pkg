@@ -1,4 +1,4 @@
-import { instantiate } from '../index';
+import TesteSingle, { TesteSingleConstructor } from '../index';
 import { ITesteSingleton } from '../loader';
 import { methodKeys } from '../methods';
 
@@ -9,27 +9,25 @@ const hasAccess = (instance: ITesteSingleton, testPrefix: string, prop: keyof IT
 };
 
 describe('TesteSingleton', () => {
-	const singleton = instantiate(2, 3);
-
 	describe('has access to properties', () => {
 		const properties = ['a', 'b'] as const;
-		properties.forEach((p) => hasAccess(singleton, 'property', p));
+		properties.forEach((p) => hasAccess(TesteSingle, 'property', p));
 	});
 
 	describe('has access to methods', () => {
-		methodKeys.forEach((m) => hasAccess(singleton, 'method', m));
+		methodKeys.forEach((m) => hasAccess(TesteSingle, 'method', m));
 	});
 
 	describe('has access to nested properties', () => {
 		test('nested.foo', () => {
-			expect(singleton.nested.batata).toBe('Ah Minha Batata');
-			expect(singleton.nested.potato).toBe('Oh My Potato');
-			expect(singleton.nested.foo()).toBe(2);
+			expect(TesteSingle.nested.batata).toBe('Ah Minha Batata');
+			expect(TesteSingle.nested.potato).toBe('Oh My Potato');
+			expect(TesteSingle.nested.foo()).toBe(2);
 		});
 	});
 
 	test('nested properties can mutate unested properties', () => {
-		const _singleton = instantiate(2, 3);
+		const _singleton = new TesteSingleConstructor(2, 3);
 
 		_singleton.a = 5;
 		expect(_singleton.nested.foo()).toBe(5);
@@ -41,10 +39,10 @@ describe('TesteSingleton', () => {
 	});
 
 	test('sum returns a+b', () => {
-		expect(singleton.sum()).toBe(5);
+		expect(TesteSingle.sum()).toBe(5);
 	});
 
 	test('stringify returns a+b as string', () => {
-		expect(singleton.show()).toBe(`2+3`);
+		expect(TesteSingle.show()).toBe(`2+3`);
 	});
 });

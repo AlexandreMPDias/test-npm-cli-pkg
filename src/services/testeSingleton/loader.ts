@@ -15,6 +15,11 @@ export interface ITesteSingleton extends Methods, PrivateMethods {
 	b: number;
 }
 
+/**
+ * ! Idk why/how this works, but hey... horse given, you dont look at it's teeth
+ */
+export abstract class ITesteSingleton implements ITesteSingleton {}
+
 type PrivateKeys = keyof PrivateMethods;
 
 export type ITesteSingletonInstance = Omit<ITesteSingleton, PrivateKeys>;
