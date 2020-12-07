@@ -1,5 +1,4 @@
-import chalk from 'chalk';
-import Git from '../../../../services/apis/Git';
+import Git from '../../../../services/git';
 
 export const underscore = '_';
 
@@ -19,15 +18,12 @@ export function clearTargetBranchName(target: string): string {
 	// Transform [-]s in [_]s
 	branchName = branchName.replace(/-/g, underscore);
 
-	// Re-add _Release
+	// Readd _Release
 	branchName = branchName + underscore + 'Release';
 
-	try {
-		Git.checkBranchExists(target);
-		throw new Error(`Branch [ ${chalk.magenta(branchName)} ] already exists`);
-	} catch (err) {
-		return branchName;
-	}
+	Git.checkBranchExists(target);
+
+	return branchName;
 }
 
 export function join(args: { sprint: number; source: string; name: string }): string {

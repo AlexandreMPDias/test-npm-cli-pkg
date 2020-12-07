@@ -7,9 +7,7 @@ const spawn = util.promisify(chprocess.spawn);
 class ExecConstructor {
 	public spawn = spawn;
 
-	public exec = (cmd: string, options: chprocess.ExecOptions = {}) => {
-		return exec(cmd, { ...options, encoding: 'utf-8' });
-	};
+	public exec = exec;
 
 	public spawnSync = chprocess.spawnSync;
 

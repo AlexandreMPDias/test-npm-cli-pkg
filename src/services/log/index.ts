@@ -3,25 +3,24 @@ import * as types from './types';
 import { COLORS, INITIAL_OPTIONS } from './constants';
 import utils from './utils';
 import chalk from 'chalk';
-import ConfigService from '../config';
 
 class LogConstructor implements types.ILogConstructor {
-	private options: Partial<types.ILogOptions>;
+	private options: types.ILogOptions;
 	private _location: string;
 	public parent: LogConstructor | null = null;
 	public simple: LogConstructor = {} as any;
 
-	constructor(location: string = '', options: Partial<types.ILogOptions> = INITIAL_OPTIONS) {
+	constructor(location: string = '', options: types.ILogOptions = INITIAL_OPTIONS) {
 		this._location = location;
 		this.options = options;
 
 		if (options.mode !== 'simple') {
-			this.simple = new LogConstructor(this._location, { ...this.options, mode: 'simple' } as any);
+			this.simple = new LogConstructor(this._location, { ...this.options, mode: 'simple' });
 		}
 	}
 
-	public setOptions = (options: Required<types.ILogOptions>) => {
-		this.options = options;
+	public setMode = (mode: types.Mode) => {
+		this.options.mode = mode;
 		return this;
 	};
 
@@ -67,18 +66,14 @@ class LogConstructor implements types.ILogConstructor {
 	};
 
 	private createLog = (args: { location?: string; key: keyof typeof COLORS; message: any }): string => {
-		this.options.mode = ConfigService.get('terminal.consoleMode');
-
 		const method = COLORS[args.key];
 		const tag = utils.createTag.call(this as any, method.base, method.tag, args.key);
 		const body = utils.createBody.call(this as any, method.bright, args);
 
-		return [tag, body].join('').trim();
+		return [tag, body].join(' ').trim();
 	};
 
-	private modeSelect: Utils.Selection<types.ILogOptions['mode']> = createSelection(
-		() => this.options.mode || INITIAL_OPTIONS.mode,
-	);
+	private modeSelect: Utils.Selection<types.ILogOptions['mode']> = createSelection(() => this.options.mode);
 }
 
 const Log = new LogConstructor() as types.ILogConstructor;

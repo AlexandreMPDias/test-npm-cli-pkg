@@ -5,7 +5,7 @@ const requireKnownCommands = <T>(yargs: Argv<T>): Argv<T> => {
 		if (argv.help) {
 			return;
 		}
-		const positionals = argv._.map(String).filter((x) => !x.startsWith('-'));
+		const positionals = argv._.filter((x) => !x.startsWith('-'));
 
 		const y = yargs as any;
 		const cmd = positionals.pop() || '';

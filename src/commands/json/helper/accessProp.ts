@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import Log from '../../../services/log';
 
 const isUsingFallbackProps = (): boolean => {
-	const argv = [...process.argv].slice(2).join(' ');
+	const argv = process.argv.slice(2).join(' ');
 	return ![/\s-p(\s|=)/, /\s--prop(\s|=)/].some((reg) => argv.match(reg));
 };
 

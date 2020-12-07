@@ -1,5 +1,4 @@
 import chalk, { Chalk } from 'chalk';
-import logSymbols from 'log-symbols';
 import * as types from '../types';
 
 const BASE_ALIGN = 9;
@@ -30,12 +29,6 @@ function createTag(this: types.LogThisType, _chalk: Chalk, msg: string, logType:
 		simple: () => {
 			if (logType === 'info') return '';
 			return _chalk(align.left(msg));
-		},
-		best: () => {
-			if (logType === 'warn') {
-				return logSymbols.warning + ' ';
-			}
-			return logSymbols[logType] + ' ';
 		},
 	})();
 }

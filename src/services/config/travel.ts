@@ -13,12 +13,7 @@ type Nest<
 	K8 = unknown
 > = Utils.Flatten.Nest<Config.FileShape, K1, K2, K3, K4, K5, K6, K7, K8>;
 
-export type Flatten = Nest<'git'> &
-	Nest<'terminal'> &
-	Nest<'terminal', 'beforeEach'> &
-	Nest<'commands'> &
-	Nest<'commands', 'git'> &
-	Nest<'commands', 'git', 'pull-request'>;
+export type Flatten = Nest<'git'> & Nest<'terminal'> & Nest<'terminal', 'beforeEach'>;
 
 export interface ITravel {
 	<K extends keyof Flatten>(key: K): Flatten[K];
