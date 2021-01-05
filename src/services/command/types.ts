@@ -13,6 +13,6 @@ export interface ICommandCreate {
 		validation?: (argv: Arguments<U>) => string | undefined;
 	}): {
 		(yargs: Argv<T>): Argv<T>;
-		handle: (handler: Callback<Arguments<U>>) => YargsCallback<T>;
+		handle: (handler: Utils.Callback<[Arguments<U>]>) => YargsCallback<T>;
 	};
 }
