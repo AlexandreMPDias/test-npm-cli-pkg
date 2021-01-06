@@ -8,6 +8,7 @@ const prettyHelpMiddleware = <T = {}>(y: Argv<T>): Argv<T> => {
 		if (err) {
 			console.log(prettifyParsed(parser(yargs)));
 			console.log(chalk.red(msg));
+			process.exit(1);
 		}
 	});
 };

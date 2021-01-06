@@ -5,8 +5,34 @@ export const Log = _Log.instance('', {
 });
 
 export interface IRunOptions {
+	/**
+	 * Indicates if log.start should be handled internally or not
+	 *
+	 * If true, automatically prints the string argument of the run/runSync call with a start
+	 * status
+	 *
+	 * @default true
+	 */
 	start?: boolean;
+
+	/**
+	 * Indicates if log.error should be handled internally or not
+	 *
+	 * If true, automatically prints the string argument of the run/runSync call with an error
+	 * status if the execution fails to finish
+	 *
+	 * @default true
+	 */
 	error?: boolean;
+
+	/**
+	 * Indicates if log.success should be handled internally or not
+	 *
+	 * If true, automatically prints the string argument of the run/runSync call with a success
+	 * status if the execution finishes sucessfully
+	 *
+	 * @default true
+	 */
 	success?: boolean;
 }
 

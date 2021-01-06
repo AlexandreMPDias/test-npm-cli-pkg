@@ -1,35 +1,31 @@
 import chalk from 'chalk';
 import CommandBuilder from '../../../services/command';
-import Log from '../../../services/log';
+import * as repos from '../../../assets/git/repositories';
+import * as types from './types';
+
+const choices: types.Choices = repos.list.reduce((total, curr) => {
+	return total.concat(curr.alias);
+}, [] as any[]);
 
 const command = CommandBuilder.create({
-	command: 'clone target',
+	command: 'clone <target...>',
 	description: 'Clones a repository to the current directory',
 	builder: (yargs) =>
 		yargs
 			.positional('target', {
 				description: 'What to clone',
-				choices: ['mobile'] as const,
+				choices, // ! DOESNT WORK...
 				demandOption: true,
 			})
 			.usage(`${chalk.yellow('clone')} ${chalk.cyan.bold('[target]')}`)
 			.example(
-				`${chalk.yellow('clone')} ${chalk.cyan.bold('mobile')}`,
+				`${chalk.yellow('clone')} ${chalk.cyan.bold('native')} ${chalk.cyan.bold('tutor')}`,
 				'Clones a repository to the current directory',
 			),
+	middlewares: ['requireKnownCommands'],
 }).handle(async (yargs) => {
-	Log.info(`cloning [ ${chalk.cyan(yargs.target)}`);
-	switch (yargs.target) {
-		case 'mobile': {
-			const superRepoHandler = await import('./superRepo');
-			superRepoHandler.clone();
-			break;
-		}
-		default: {
-			throw new Error('Invalid Clone method');
-		}
-	}
-	Log.success(`cloned [ ${chalk.cyan(yargs.target)}`);
+	const { handler } = await import('./handler');
+	handler(yargs as any);
 });
 
 export default command;

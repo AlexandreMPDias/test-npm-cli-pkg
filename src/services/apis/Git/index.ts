@@ -14,14 +14,16 @@ class GitConstructor {
 		return this._url;
 	}
 
-	public get: local.getter.Getter = local.getter.createGetters();
+	public clone: ext.clone.Type;
+	public commit: ext.commit.Type;
 	public fetch: ext.fetch.Fetch = ext.fetch.fetch;
+	public get: local.getter.Getter = local.getter.createGetters();
 	public checkBranchExists: local.checkBranchExists.Type = local.checkBranchExists.method;
 	public hasGitDir: local.hasGitDir.Type = local.hasGitDir.method;
-	public commit: ext.commit.Type = {} as any;
 
 	constructor() {
 		this.commit = ext.commit.bind(this);
+		this.clone = ext.clone.bind(this);
 	}
 }
 

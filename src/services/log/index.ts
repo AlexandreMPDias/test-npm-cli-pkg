@@ -20,6 +20,11 @@ class LogConstructor implements types.ILogConstructor {
 		}
 	}
 
+	public skip = (n: number): LogConstructor => {
+		console.log('\n'.repeat(n - 1));
+		return this;
+	};
+
 	public setOptions = (options: Required<types.ILogOptions>) => {
 		this.options = options;
 		return this;

@@ -21,6 +21,8 @@ export interface ILogConstructor extends Record<LogType, LogMethod> {
 	parent: ILogConstructor | null;
 	simple: ILogConstructor;
 
+	skip: (n: number) => ILogConstructor;
+
 	setOptions: (options: ILogOptions) => ILogConstructor;
 	instance: (location: string, options?: Partial<ILogOptions>) => ILogConstructor;
 	child: (location: string, options?: Partial<ILogOptions>) => ILogConstructor;
