@@ -28,6 +28,9 @@ async function run<Func extends FuncOrCmdAsync<any>>(
 		opts.success && show.success(name);
 		return out;
 	} catch (err) {
+		if (opts.throwError) {
+			throw err;
+		}
 		opts.error && show.error(name);
 		return Promise.resolve(null);
 	}
@@ -64,6 +67,9 @@ function runSync<FuncOrCmd extends FuncOrCmdSync>(
 		opts.success && show.success(name);
 		return out;
 	} catch (err) {
+		if (opts.throwError) {
+			throw err;
+		}
 		opts.error && show.error(name);
 		return null;
 	}

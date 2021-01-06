@@ -18,7 +18,7 @@ const _clone = async (ctx: GitThis, repoKey: repos.Repos<'keysWithAlias'>) => {
 		const method = ConfigService.get('git.cloneMethod');
 		const uri = repo.uri[method];
 		const location = chalk.yellow(`${process.cwd()}${sep}${repo.key}`);
-		await run(() => `git clone ${uri}`, `${coloredRepoKey} cloning`);
+		await run(() => `git clone ${uri}`, `${coloredRepoKey} cloning`, { throwError: true });
 		ctx.log.info(`${coloredRepoKey} - cloned into ${location}`);
 	} catch (err) {
 		ctx.log.abort(err);

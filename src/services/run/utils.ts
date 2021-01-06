@@ -34,6 +34,13 @@ export interface IRunOptions {
 	 * @default true
 	 */
 	success?: boolean;
+
+	/**
+	 * When an error is found, throws it
+	 *
+	 * @default false
+	 */
+	throwError?: boolean;
 }
 
 const ifUndef = <A, B>(value: A, fallback: B): Exclude<A | B, undefined> => {
@@ -45,10 +52,11 @@ export const parseOptions = (options?: IRunOptions): Required<IRunOptions> => {
 		success: ifUndef(options?.success, true),
 		error: ifUndef(options?.error, true),
 		start: ifUndef(options?.start, true),
+		throwError: ifUndef(options?.throwError, false),
 	};
 };
 
-export const show: Record<keyof IRunOptions, (name: string) => void> = {
+export const show: Record<'start' | 'success' | 'error', (name: string) => void> = {
 	start: (name) => Log.info(name),
 	success: Log.success,
 	error: Log.error,
