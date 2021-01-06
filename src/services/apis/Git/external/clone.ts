@@ -1,4 +1,4 @@
-import Exec from '../../../exec';
+import { sep } from 'path';
 import { GitThis } from '../types';
 import * as repos from '../../../../assets/git/repositories';
 import ConfigService from '../../../config';
@@ -17,8 +17,9 @@ const _clone = async (ctx: GitThis, repoKey: repos.Repos<'keysWithAlias'>) => {
 		const coloredRepoKey = chalk.magentaBright(repo.key);
 		const method = ConfigService.get('git.cloneMethod');
 		const uri = repo.uri[method];
-		await run(() => `echo git clone ${uri}`, `${coloredRepoKey} cloning`);
-		ctx.log.info(`${coloredRepoKey} - cloned into ${process.cwd()}`);
+		const location = chalk.yellow(`${process.cwd()}${sep}${repo.key}`);
+		await run(() => `git clone ${uri}`, `${coloredRepoKey} cloning`);
+		ctx.log.info(`${coloredRepoKey} - cloned into ${location}`);
 	} catch (err) {
 		ctx.log.abort(err);
 	}

@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import Git from '../../../services/apis/Git';
 import Log from '../../../services/log';
 import * as repos from '../../../assets/git/repositories';
+
 import * as types from './types';
 
 export async function handler({ target }: types.Args) {
@@ -18,9 +19,14 @@ export async function handler({ target }: types.Args) {
 			}
 		}
 	});
-	for (const key of Array.from(validUniqueRepos.values())) {
-		await Git.clone(key);
-		Log.skip(1);
-	}
+	await Promise.all(
+		Array.from(validUniqueRepos.values()).map(async (repoKey) => {
+			await Git.clone(repoKey);
+		}),
+	);
+	// for (const key of Array.from(validUniqueRepos.values())) {
+	// 	await Git.clone(key);
+	// }
+	Log.skip(1);
 	Log.success(`Finished cloning all repositories`);
 }
