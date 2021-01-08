@@ -13,7 +13,7 @@ const command = CommandBuilder.create({
 	Log.info(`copying [ ${chalk.cyan('super-repo')}`);
 	const superRepoHandler = await import('../getSuperRepo/handler');
 	superRepoHandler.clone();
-	Log.success(`copied [ ${chalk.cyan(yargs.target)}`);
+	Log.success(`copied [ ${chalk.cyan('super-repo')} ]`);
 });
 
 export default command;
