@@ -44,7 +44,7 @@ const command = CommandBuilder.create({
 	Exec.execSync(`git fetch -f origin ${args.source}:${targetBranchName}`);
 
 	console.log('Creating empty commit message');
-	Exec.execSync(`git commit --allow-empty-message -m "Created release branch ${args.name}"`);
+	Exec.execSync(`git commit --allow-empty -m "Created release branch ${args.name}"`);
 
 	console.log('Pushing new branch to upstream');
 	Exec.execSync(`git push -u origin ${targetBranchName}`);
