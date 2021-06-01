@@ -6,7 +6,7 @@ import { PathLike } from 'fs';
 const RELATIVE_PATH_RESOLVER: Record<PathRelation, () => string> = {
 	cwd: () => '',
 	home: () => homedir(),
-	root: () => path.join(...new Array(3).fill('..')),
+	root: () => path.join(__dirname, '..', '..', '..', '..'),
 };
 
 const resolveRelativePath = <P extends PathLike | number>(pathRelationKey: PathRelation, _path: P): P => {
@@ -15,7 +15,7 @@ const resolveRelativePath = <P extends PathLike | number>(pathRelationKey: PathR
 	}
 	if (pathRelationKey in RELATIVE_PATH_RESOLVER) {
 		const relativePath = RELATIVE_PATH_RESOLVER[pathRelationKey]();
-		return path.join(relativePath, _path) as any;
+		return path.resolve(path.join(relativePath, _path)) as any;
 	}
 	throw new TypeError(`Invalid relation type [ ${pathRelationKey} ]`);
 };

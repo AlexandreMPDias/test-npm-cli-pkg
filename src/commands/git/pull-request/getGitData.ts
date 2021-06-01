@@ -12,7 +12,7 @@ export function extractParent(branch: string, remote: string): string | null {
 	}
 	Log.warn(`enableParentDetection is enabled`);
 
-	const branchWasSetInCmd = [...process.argv]
+	const branchWasSetInCmd = Array.from(process.argv)
 		.slice(1)
 		.join(' ')
 		.match(/--branch/);

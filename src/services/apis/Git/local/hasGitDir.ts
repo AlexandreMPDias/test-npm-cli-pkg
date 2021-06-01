@@ -10,13 +10,15 @@ interface IOptions {
 }
 
 function hasGitDir(this: GitThis, location: string | null = null, options: IOptions = { throwOnError: true }) {
-	const _path = join(location || '', '.git');
-	const exists = FileService.sync.exists(_path, {
-		relativeTo: options.relativeTo,
+	const loc = location || '';
+	const gitPath = FileService.sync.locateInPath('.git', join(loc, '.git'));
+
+	const exists = FileService.sync.exists(gitPath, {
+		relativeTo: options.relativeTo || 'root',
 	});
 
 	if (options.throwOnError && !exists) {
-		throw new Error(chalk.redBright(`No git directory found at [ ${chalk.cyan(location)} ]`));
+		throw new Error(chalk.redBright(`No git directory found at [ ${chalk.cyan(loc)} ]`));
 	}
 	return exists;
 }

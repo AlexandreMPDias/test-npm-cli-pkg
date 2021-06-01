@@ -1,12 +1,5 @@
-import {
-	writeFileSync,
-	mkdirSync,
-	WriteFileOptions,
-	PathLike,
-	readFileSync,
-	MakeDirectoryOptions,
-	existsSync,
-} from 'fs';
+import { writeFileSync, mkdirSync, PathLike, readFileSync, existsSync } from 'fs';
+import { sep, resolve } from 'path';
 import * as utils from '../utils';
 import * as types from './types';
 import CommonConstructor from '../common';
@@ -31,7 +24,7 @@ class FileServiceSyncConstructor extends CommonConstructor {
 	) => {
 		const _ = this.getValues('writeFile', path, options);
 		const parsedData = utils.data.stringify(data);
-		return this.attempt(() => writeFileSync(_.path, parsedData, _.fsOptions), _);
+		return this.attempt(() => writeFileSync(_.path, parsedData, _.fsOptions as any), _);
 	};
 
 	/**
@@ -44,7 +37,7 @@ class FileServiceSyncConstructor extends CommonConstructor {
 	 */
 	readFile = (path: PathLike | number, options: types.ReadFileOption = {}): string | Error => {
 		const _ = this.getValues('readFile', path, options);
-		return this.attempt(() => readFileSync(_.path, _.fsOptions), _);
+		return this.attempt(() => readFileSync(_.path, _.fsOptions as any), _);
 	};
 
 	/**
@@ -55,7 +48,7 @@ class FileServiceSyncConstructor extends CommonConstructor {
 	 */
 	mkdir = (path: PathLike, options: types.MkdirOption = { recursive: true }): string => {
 		const _ = this.getValues('mkdir', path, options);
-		return this.attempt(() => mkdirSync(_.path, _.fsOptions), _);
+		return this.attempt(() => mkdirSync(_.path, _.fsOptions as any), _);
 	};
 
 	/**
@@ -66,6 +59,28 @@ class FileServiceSyncConstructor extends CommonConstructor {
 	exists = (path: PathLike, options: types.ExistsOption = {}): boolean => {
 		const _ = this.getValues('exists', path, options);
 		return this.attempt(() => existsSync(_.path), _);
+	};
+
+	locateInPath = (pattern: string | RegExp, path: string): string => {
+		const paths = path.split(/\\|\//);
+		const checkPath = (): boolean => {
+			const last = paths[paths.length - 1] || '';
+			if (typeof pattern === 'string') {
+				return last.endsWith(pattern) || last === pattern;
+			} else {
+				return !!last.match(pattern);
+			}
+		};
+		while (paths.length) {
+			if (checkPath()) {
+				const p = paths.join(sep);
+				if (existsSync(p)) {
+					return p;
+				}
+			}
+			paths.pop();
+		}
+		return path;
 	};
 }
 
