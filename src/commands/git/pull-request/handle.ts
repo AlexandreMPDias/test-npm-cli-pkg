@@ -24,7 +24,7 @@ const handle = async ({ branch }: Args) => {
 		Git.checkBranchExists(git.target);
 		const url = buildUrl(git);
 		Log.success(`opening PR for [ ${chalk.cyan(git.branch)} > ${chalk.magenta(git.target)} ]`);
-		// Utils.openLink(url);
+		Utils.openLink(url);
 	} catch (err) {
 		Log.abort(err);
 	}
