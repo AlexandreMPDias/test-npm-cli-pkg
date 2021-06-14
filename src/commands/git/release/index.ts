@@ -6,14 +6,15 @@ import Git from '../../../services/apis/Git';
 import Log from '../../../services/log';
 
 const command = CommandBuilder.create({
-	command: 'release sprint name source',
+	command: 'release sprint <name> source',
 	description: 'Creates a release branch at the remote',
 	builder: (yargs) =>
 		yargs
 			.positional('sprint', {
 				description: 'The current sprint',
-				type: 'string',
+				type: 'number',
 				demandOption: true,
+				coerce: releaseUtils.getDefaultSprintNumber,
 			})
 			.positional('name', {
 				description: 'An identifier for the branch',
@@ -33,23 +34,23 @@ const command = CommandBuilder.create({
 }).handle((args) => {
 	try {
 		Git.hasGitDir();
+		const targetBranchName = releaseUtils.join(args);
+
+		console.log({ args, targetBranchName });
+
+		console.log('Creating branch ' + chalk.yellow('locally'));
+		Exec.execSync(`git fetch -f origin ${args.source}:${targetBranchName}`);
+
+		console.log('Creating empty commit message');
+		Exec.execSync(`git commit --allow-empty -m "Created release branch ${args.name}"`);
+
+		console.log('Pushing new branch to upstream');
+		Exec.execSync(`git push -u origin ${targetBranchName}`);
+
+		console.log(chalk.green('done'));
 	} catch (err) {
 		Log.abort(err);
 	}
-
-	console.log(args);
-	const targetBranchName = releaseUtils.join({ ...args, sprint: Number(args.sprint) });
-
-	console.log('Creating branch ' + chalk.yellow('locally'));
-	Exec.execSync(`git fetch -f origin ${args.source}:${targetBranchName}`);
-
-	console.log('Creating empty commit message');
-	Exec.execSync(`git commit --allow-empty -m "Created release branch ${args.name}"`);
-
-	console.log('Pushing new branch to upstream');
-	Exec.execSync(`git push -u origin ${targetBranchName}`);
-
-	console.log(chalk.green('done'));
 });
 
 export default command;
