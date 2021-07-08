@@ -1,6 +1,6 @@
 import { path } from 'ramda';
-import { DEFAULT_SHAPE } from './constants';
-import flat from '../../utilities/object/flatten';
+import { DEFAULT_SHAPE } from '../constants';
+import flat from '../../../utilities/object/flatten';
 
 type Obj = Record<Readonly<string>, any>;
 type Str<S> = S extends string ? S : never;
@@ -20,18 +20,20 @@ type Terminal = SpreadRemoving<Config.FileShape, 'terminal', TerminalBeforeEach,
 
 type CommandsGitPullRequest = SpreadThrough<Config.FileShape['commands']['git'], 'pull-request'>;
 type CommandsGit = SpreadRemoving<Config.FileShape['commands'], 'git', CommandsGitPullRequest, 'pull-request'>;
-type Commands = SpreadRemoving<Config.FileShape, 'commands', CommandsGit, 'git'>;
+type CommandsDash = SpreadThrough<Config.FileShape['commands'], 'dash'>;
+type Commands = SpreadRemoving<Config.FileShape, 'commands', CommandsGit, 'git'> &
+	SpreadRemoving<Config.FileShape, 'commands', CommandsDash, 'dash'>;
 
 export type Flatten = Git & Terminal & Commands;
 
+export interface IOptions {
+	required?: boolean;
+}
+
 export interface ITravel {
-	<K extends keyof Flatten>(key: K): Flatten[K];
+	<K extends keyof Flatten>(key: K, options?: IOptions): Flatten[K];
 }
 
 export const flatConfig: Flatten = flat(DEFAULT_SHAPE) as any;
 
-const getTravel = (config: Config.FileShape): ITravel => {
-	return (fullKey: string) => path(fullKey.split('.'), config) as any;
-};
-
-export default getTravel;
+export const travel = (config: Config.FileShape, fullKey: string) => path(fullKey.split('.'), config) as any;

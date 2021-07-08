@@ -2,12 +2,14 @@ import chalk from 'chalk';
 import Exec from '../exec';
 import Platform from '../platform';
 import factories from './factories';
-
+import timestamp from './timestamp';
 class UtilsConstructor {
 	public factories: typeof factories;
+	public timestamp: typeof timestamp;
 
 	constructor() {
 		this.factories = factories;
+		this.timestamp = timestamp;
 	}
 
 	/**

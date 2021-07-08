@@ -14,6 +14,10 @@ declare namespace Config {
 					enableParentDetection: boolean;
 				};
 			};
+			dash: {
+				token: string | null;
+				timezone: string | null;
+			};
 		};
 	};
 }

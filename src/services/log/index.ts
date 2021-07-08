@@ -72,7 +72,7 @@ class LogConstructor implements types.ILogConstructor {
 	};
 
 	private createLog = (args: { location?: string; key: keyof typeof COLORS; message: any }): string => {
-		this.options.mode = ConfigService.get('terminal.consoleMode');
+		this.options.mode = ConfigService?.get('terminal.consoleMode') || 'best';
 
 		const method = COLORS[args.key];
 		const tag = utils.createTag.call(this as any, method.base, method.tag, args.key);
