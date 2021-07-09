@@ -1,5 +1,3 @@
-type OrUndef<T> = T | undefined;
-
 /**
  * Declaration of a Select function
  * (Exact same behaviour as react-native.Platform.select)
@@ -38,4 +36,5 @@ const createSelector = <All>() => {
 
 	return { for: selector };
 };
+
 export default createSelector;

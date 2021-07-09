@@ -1,9 +1,13 @@
 {
-	"extends": ["tslint:recommended", "tslint-config-prettier"],
+	"extends": [
+		"tslint:recommended",
+		"tslint-config-prettier"
+	],
 	"rules": {
-		"no-console":false,
+		"no-console": false,
 		"callable-types": false,
 		"array-type": false,
-		"no-unused-expression": false
+		"no-unused-expression": false,
+		"no-namespace": false
 	}
 }

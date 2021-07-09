@@ -1,24 +1,20 @@
 {
 	"compilerOptions": {
-	  "target": "es5",
-	  "module": "commonjs",
-	  "lib":  ["es2017", "es7", "es6", "dom"],
-	  "outDir": "lib",
-	  "rootDir": "src",
-	  "strict": true,
-	  "allowSyntheticDefaultImports": true,
-	  "esModuleInterop": true,
-	  "resolveJsonModule": true,
-	  "importHelpers": true,
-	  "removeComments": true,
-	  "strictNullChecks": true
+		"target": "es5",
+		"module": "commonjs",
+		"lib": ["es2017", "es7", "es6", "dom"],
+		"outDir": "lib",
+		"rootDir": "src",
+		"strict": true,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"importHelpers": true,
+		"removeComments": true,
+		"noImplicitAny": false,
+		"strictNullChecks": true,
+		"skipLibCheck": true
 	},
 	"include": ["src"],
-	"exclude": [
-	  "node_modules",
-	  "lib",
-	  "test",
-	  "templates",
-	  "**/__tests__/*"
-	]
-  }
+	"exclude": ["node_modules", "lib", "test", "templates", "**/__tests__/*"]
+}

@@ -58,6 +58,7 @@
 		"@liftr/tscov": "^2.0.0",
 		"@types/axios": "^0.14.0",
 		"@types/bluebird": "^3.5.33",
+		"@types/chalk": "^2.2.0",
 		"@types/clear": "^0.1.0",
 		"@types/figlet": "^1.2.1",
 		"@types/inquirer": "^7.3.1",
