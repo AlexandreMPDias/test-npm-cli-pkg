@@ -7,6 +7,7 @@ const getCurrentWeekNumber = (): number => {
 };
 
 const getDefaultSprintNumberFn = (value: number): number => {
+	console.log({ value });
 	if (value === DEFAULT_SPRINT) {
 		const week = getCurrentWeekNumber();
 		const sprint = week - 1;

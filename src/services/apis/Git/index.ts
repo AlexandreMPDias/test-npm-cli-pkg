@@ -20,10 +20,12 @@ class GitConstructor {
 	public get: local.getter.Getter = local.getter.createGetters();
 	public checkBranchExists: local.checkBranchExists.Type = local.checkBranchExists.method;
 	public hasGitDir: local.hasGitDir.Type = local.hasGitDir.method;
+	public checkout: ext.checkout.Type;
 
 	constructor() {
 		this.commit = ext.commit.bind(this);
 		this.clone = ext.clone.bind(this);
+		this.checkout = ext.checkout.bind(this);
 	}
 }
 

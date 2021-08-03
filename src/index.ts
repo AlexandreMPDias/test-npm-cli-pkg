@@ -20,4 +20,4 @@ const base = yargs(hideBin([...process.argv])).demandCommand(1);
 const main = applyGlobalMiddlewares(commands.all(base));
 const _ = main.argv;
 
-console.log(_);
+// console.log(_);

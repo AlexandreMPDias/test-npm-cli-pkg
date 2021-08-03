@@ -1,6 +1,5 @@
 import chalk from 'chalk';
 import Git from '../../../../services/apis/Git';
-export * from './get-default-spring-number';
 
 export const underscore = '_';
 

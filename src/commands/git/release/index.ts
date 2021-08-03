@@ -4,18 +4,13 @@ import Exec from '../../../services/exec';
 import * as releaseUtils from './utils';
 import Git from '../../../services/apis/Git';
 import Log from '../../../services/log';
+import openPullRequest from '../pull-request/handle';
 
 const command = CommandBuilder.create({
-	command: 'release sprint <name> source',
+	command: 'release <name> [source]',
 	description: 'Creates a release branch at the remote',
 	builder: (yargs) =>
 		yargs
-			.positional('sprint', {
-				description: 'The current sprint',
-				type: 'number',
-				demandOption: true,
-				coerce: releaseUtils.getDefaultSprintNumber,
-			})
 			.positional('name', {
 				description: 'An identifier for the branch',
 				type: 'string',
@@ -26,6 +21,12 @@ const command = CommandBuilder.create({
 				type: 'string',
 				default: 'dev',
 			})
+			.option('sprint', {
+				description: 'The current sprint',
+				type: 'number',
+				coerce: releaseUtils.getDefaultSprintNumber,
+				default: releaseUtils.getDefaultSprintNumber.default,
+			})
 			.usage(`${chalk.yellow('release')} ${chalk.cyan.bold('[sprint] [name]')} ${chalk.magenta('<source>')}`)
 			.example(
 				`${chalk.yellow('release')} ${chalk.cyan.bold('20 Analytics')}`,
@@ -33,21 +34,37 @@ const command = CommandBuilder.create({
 			),
 }).handle((args) => {
 	try {
+		releaseUtils.logs.object(args, ['name'], ['sprint'], ['source']);
+
 		Git.hasGitDir();
 		const targetBranchName = releaseUtils.join(args);
 
-		console.log({ args, targetBranchName });
+		const oldBranch = Git.get.activeBranch.sync()!;
+
+		console.log(chalk.red('active-branch'), oldBranch);
+
+		releaseUtils.logs.single('target-branch', targetBranchName, chalk.green);
 
 		console.log('Creating branch ' + chalk.yellow('locally'));
 		Exec.execSync(`git fetch -f origin ${args.source}:${targetBranchName}`);
 
+		console.log('Checking out to new branch');
+		Git.checkout(targetBranchName);
+
 		console.log('Creating empty commit message');
-		Exec.execSync(`git commit --allow-empty -m "Created release branch ${args.name}"`);
+		Git.commit.empty(`Created release branch ${args.name}`);
 
 		console.log('Pushing new branch to upstream');
 		Exec.execSync(`git push -u origin ${targetBranchName}`);
 
+		openPullRequest({ branch: oldBranch });
+
+		console.log(`Checking out back to source branch: ${chalk.red(oldBranch)}`);
+		Git.checkout(oldBranch);
+
 		console.log(chalk.green('done'));
+
+		releaseUtils.logs.skip();
 	} catch (err) {
 		Log.abort(err);
 	}

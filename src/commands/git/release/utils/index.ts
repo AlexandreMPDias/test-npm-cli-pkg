@@ -1,5 +1,6 @@
 import { clearTargetBranchName, underscore } from './clear-target-branch-name';
-export * from './get-default-spring-number';
+export * from './get-default-sprint-number';
+export * from './log-input';
 
 export function getTimeIdOfBranch(sprint: number) {
 	// Get the last 2 digits of the Year
