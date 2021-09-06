@@ -3,6 +3,15 @@ import Exec from '../../../../../services/exec';
 import Log from '../../../../../services/log';
 import { ExtractRet, ok, bad } from './utils';
 
+const pipe = <T>(...fns: Array<(value: T) => T>) => {
+	return (value: T): T => fns.reduce((curr, transf) => transf(curr), value);
+};
+
+type ReleaseBranch = {
+	source: string;
+	name: string;
+};
+
 const wasBranchSetInCommandLine = (): boolean => {
 	const branchWasSetInCmd = Array.from(process.argv)
 		.slice(1)
@@ -22,30 +31,37 @@ const getParentCandidates = (branch: string): string[] => {
 	return parentCandidates;
 };
 
-const getReleaseBranches = (remote: string): string[] => {
-	const transformations: Array<(line: string) => string> = [
+const getReleaseBranches = (remote: string): ReleaseBranch[] => {
+	const bs = Exec.execSync(`git ls-remote --heads ${remote}`)?.split('\n');
+
+	if (!bs) return [];
+
+	const preSourceTransformation = pipe<string>(
 		// Remove hash from name
 		(line) => line.replace(/.+\/heads\//, ''),
+	);
 
+	const branches = bs.map((b) => preSourceTransformation(b));
+
+	const getName = pipe<string>(
 		// Remove Sprint and Year from Name
 		(line) => line.replace(/^.+?([A-Z])/, '$1'),
-	];
+		// Remove Release from name
+		(line) => line.replace(/_Release$/, ''),
+	);
 
-	const branches = Exec.execSync(`git ls-remote --heads ${remote}`)?.split('\n');
-
-	if (!branches) return [];
-
-	const formatted = transformations.reduce((bs, transf) => bs.map(transf), branches);
-
-	const releaseBranches = formatted.filter((line) => line.match(/_Release$/));
-
-	return releaseBranches.map((line) => line.replace(/_Release$/, ''));
+	return branches
+		.map((source) => ({
+			source,
+			name: getName(source),
+		}))
+		.filter(({ source }) => source.match(/_Release$/));
 };
 
-const findParent = (parentCandidates: string[], releaseBranches: string[]): string | null => {
-	const parent = releaseBranches.find((b) => parentCandidates.some((candidate) => b.match(candidate)));
+const findParent = (parentCandidates: string[], releaseBranches: ReleaseBranch[]): string | null => {
+	const parent = releaseBranches.find(({ name }) => parentCandidates.some((candidate) => name.match(candidate)));
 
-	return parent ?? null;
+	return parent?.source ?? null;
 };
 
 export function __extractParent(branch: string, remote: string): ExtractRet {
@@ -63,8 +79,6 @@ export function __extractParent(branch: string, remote: string): ExtractRet {
 	const parentCandidates = getParentCandidates(branch);
 
 	const releaseBranches = getReleaseBranches(remote);
-
-	console.log({ parentCandidates, releaseBranches });
 
 	const parent = findParent(parentCandidates, releaseBranches);
 

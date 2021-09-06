@@ -29,7 +29,7 @@ class UtilsConstructor {
 			default: 'xdg-open',
 		});
 		await Exec.exec(`${open} "${url}"`);
-		console.log(chalk.green(`done.`));
+		console.log(chalk.green(` done.`));
 	};
 }
 
