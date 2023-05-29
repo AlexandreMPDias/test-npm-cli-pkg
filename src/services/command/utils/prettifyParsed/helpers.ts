@@ -2,9 +2,12 @@ import { IShape } from '../parser';
 import { compose as _ramdaCompose } from 'ramda';
 import chalk from 'chalk';
 
-const compose = (_ramdaCompose as unknown) as (...args: Utils.PipeFn<string>[]) => Utils.PipeFn<string>;
+const compose = _ramdaCompose as unknown as (...args: Utils.PipeFn<string>[]) => Utils.PipeFn<string>;
 
-const applyForNonEmpty = (cb: Utils.PipeFn<string>) => (s: string = '$1') => (s ? cb(s) : s);
+const applyForNonEmpty =
+	(cb: Utils.PipeFn<string>) =>
+	(s: string = '$1') =>
+		s ? cb(s) : s;
 
 type WUT = 'x1' | 'x2' | 'x3' | 'x4' | 'x5' | 'x6';
 

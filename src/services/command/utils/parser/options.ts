@@ -83,33 +83,31 @@ const parseOptions = (yargs: Argv) => {
 		const descriptions = y.getDescriptions();
 		const flagKeys = ['boolean', 'array', 'choices', 'number', 'demandedOptions'];
 
-		return Object.keys(flags.key).map(
-			(key): types.IOptions => {
-				return {
-					aliases: [key].concat(flags.alias[key]),
-					desc: descriptions[key],
-					flags: flagKeys
-						.map((fKey) => {
-							const value = flags[fKey][key];
-							if (value !== undefined) {
-								return { key: fKey, value };
-							}
-							return null;
-						})
-						.filter((x) => x)
-						.map((flag) => {
-							if (flag?.key === 'choices') {
-								return `choices: ${flag.value.join(', ')}`;
-							}
-							if (flag?.key === 'demandedOptions') {
-								return 'required';
-							}
-							return flag?.value;
-						})
-						.map((x) => `[${x}]`),
-				};
-			},
-		);
+		return Object.keys(flags.key).map((key): types.IOptions => {
+			return {
+				aliases: [key].concat(flags.alias[key]),
+				desc: descriptions[key],
+				flags: flagKeys
+					.map((fKey) => {
+						const value = flags[fKey][key];
+						if (value !== undefined) {
+							return { key: fKey, value };
+						}
+						return null;
+					})
+					.filter((x) => x)
+					.map((flag) => {
+						if (flag?.key === 'choices') {
+							return `choices: ${flag.value.join(', ')}`;
+						}
+						if (flag?.key === 'demandedOptions') {
+							return 'required';
+						}
+						return flag?.value;
+					})
+					.map((x) => `[${x}]`),
+			};
+		});
 	} catch {
 		let opts: Array<string> = [];
 		yargs.showHelp((help) => {

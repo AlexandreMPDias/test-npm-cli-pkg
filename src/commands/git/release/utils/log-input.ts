@@ -33,11 +33,9 @@ class LogInput {
 	};
 
 	object = <S>(source: S, ...entries: Array<[key: keyof S, paint?: chalk.ChalkFunction]>): LogInput => {
-		const manyEntries: ManyEntry[] = entries.map(
-			([key, paint]): ManyEntry => {
-				return [String(key), String(source[key]), paint];
-			},
-		);
+		const manyEntries: ManyEntry[] = entries.map(([key, paint]): ManyEntry => {
+			return [String(key), String(source[key]), paint];
+		});
 
 		this.many(...manyEntries);
 
