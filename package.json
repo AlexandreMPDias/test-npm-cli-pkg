@@ -44,6 +44,7 @@
 		"commander": "^6.2.0",
 		"figlet": "^1.5.0",
 		"figures": "^3.2.0",
+		"find-up": "^6.3.0",
 		"fs-extra": "^9.0.1",
 		"inquirer": "^7.3.3",
 		"inversify": "^5.0.1",

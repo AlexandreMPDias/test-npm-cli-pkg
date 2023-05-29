@@ -1,5 +1,5 @@
 import { writeFileSync, mkdirSync, PathLike, readFileSync, existsSync } from 'fs';
-import { sep, resolve } from 'path';
+import { sep, resolve, dirname, join } from 'path';
 import * as utils from '../utils';
 import * as types from './types';
 import CommonConstructor from '../common';
@@ -59,6 +59,38 @@ class FileServiceSyncConstructor extends CommonConstructor {
 	exists = (path: PathLike, options: types.ExistsOption = {}): boolean => {
 		const _ = this.getValues('exists', path, options);
 		return this.attempt(() => existsSync(_.path), _);
+	};
+
+	findUp = (path: string, options: types.FindUpOptions): string | null => {
+		const { cwd: start } = options;
+		let currentDir = resolve(start);
+		let iter = 0;
+
+		while (true) {
+			const filePath = join(currentDir, path);
+
+			console.log({
+				iter,
+				exists: existsSync(filePath),
+				currentDir,
+				filePath,
+			});
+
+			if (existsSync(filePath)) {
+				return filePath;
+			}
+
+			// Move up to the parent directory
+			const parentDir = dirname(currentDir);
+
+			// If we have reached the root directory, stop searching
+			if (currentDir === parentDir) {
+				return null;
+			}
+
+			currentDir = parentDir;
+			iter++;
+		}
 	};
 
 	locateInPath = (pattern: string | RegExp, path: string): string => {
